@@ -1,0 +1,13 @@
+# Ignorer l'environnement virtuel Python
+venv/
+
+# Fichiers temporaires Python
+__pycache__/
+*.py[cod]
+*.log
+
+
+# Caches et fichiers inutiles
+*.DS_Store
+*.tmp
+*.bak
