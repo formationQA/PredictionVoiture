@@ -1,5 +1,6 @@
 # Ignorer l'environnement virtuel Python
 venv/
+scr/venv
 
 # Fichiers temporaires Python
 __pycache__/
