@@ -1,0 +1,50 @@
+/* Titre principal */
+.title {
+    color: #2c3e50; /* Darker blue-grey */
+    text-align: center;
+    font-size: 42px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Zone de résultat */
+.result {
+    background: linear-gradient(145deg, #d4f1d4, #f0fff0); /* Light green gradient */
+    border: 1px solid #a3d9a5; /* Slightly darker green border */
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 35px;
+    font-size: 26px;
+    color: #2e7d32; /* Dark green text */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Optionnel : Style des labels Streamlit */
+label {
+    font-weight: 600;
+    color: #34495e; /* Dark blue-grey for labels */
+}
+
+/* Optionnel : Styliser les selectbox / inputs */
+.stSelectbox, .stNumberInput {
+    border-radius: 8px; /* Rounded corners for inputs */
+}
+
+/* Optionnel : Boutons */
+div.stButton > button {
+    background-color: #3498db; /* Blue button */
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+div.stButton > button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    cursor: pointer;
+}
