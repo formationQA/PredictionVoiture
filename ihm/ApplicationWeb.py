@@ -3,18 +3,15 @@ import requests
 import datetime
 
 # --- Chargement du CSS ---
-# Ensure 'styles.css' is in the same directory as this script
 try:
     with open("styles.css") as css_file:
         st.markdown(f"<style>{css_file.read()}</style>", unsafe_allow_html=True)
 except FileNotFoundError:
     st.error("`styles.css` not found. Please make sure the file is in the same directory.")
-    # You might want to add some default basic styling here if the CSS file is crucial
 except Exception as e:
     st.error(f"Error loading CSS: {e}")
 
 
-# --- Récupérer les marques (mise en cache) ---
 @st.cache_data(ttl=300)  # Cache data for 5 minutes
 def get_marques():
     try:
@@ -23,7 +20,7 @@ def get_marques():
         return response.json().get("marques", [])
     except requests.exceptions.ConnectionError:
         st.error(
-            "Erreur de connexion : Assurez-vous que votre backend FastAPI est en cours d'exécution sur http://127.0.0.1:8002.")
+            "Erreur de connexion")
         return []
     except Exception as e:
         st.error(f"Impossible de charger les marques : {e}")
@@ -136,5 +133,5 @@ if st.button("Estimer le prix de votre voiture", use_container_width=True):
             st.error(f"Une erreur inattendue s'est produite lors de la prédiction : {e}")
 
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #888; font-size: 0.9em;'>Développé avec ❤️ et Streamlit</p>",
+st.markdown("<p style='text-align: center; color: #888; font-size: 0.9em;'>Développé par SADOUK Mokrane avec Streamlit</p>",
             unsafe_allow_html=True)

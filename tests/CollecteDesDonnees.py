@@ -20,10 +20,10 @@ def main():
     instancejson.SauvegardeJSON()
     data_inserter = InsertionDonnees(db_connection)
     data_inserter.InsererLesDonneesEnBase()
-    db_connection.close()
     nettoyage.CompresserJSon()
     trainer = ModelDePrediction()
     trainer.train_and_save_model()
+    db_connection.close()
 
 
 if __name__ == "__main__":

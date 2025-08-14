@@ -6,14 +6,17 @@ class FormulaireAPI:
         self.db_connection = db_connection
 
     def get_marques(self):
+        # Requête SQL pour récupérer toutes les marques
         query = ("SELECT DISTINCT marque FROM dataproject.voiture "
                  "ORDER BY marque asc ")
         return self.db_connection.execute_query(query)
 
     def get_modeles(self, marque):
+        # Requête SQL pour récupérer les modèles d'une marque donnée
         query = ("SELECT DISTINCT modele FROM dataproject.voiture WHERE marque = %s"
                  " ORDER BY modele ASC")
         return self.db_connection.execute_query(query, (marque,))
+
 
 # Définir le routeur pour l'API
 router = APIRouter()

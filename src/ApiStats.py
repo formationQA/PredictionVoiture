@@ -3,7 +3,7 @@ from ConnexionBDD import DatabaseConnection
 
 router = APIRouter()
 db = DatabaseConnection()
-db.connect()  # Ensure connection is attempted when the module is loaded
+db.connect()
 
 
 @router.get("/voiture")

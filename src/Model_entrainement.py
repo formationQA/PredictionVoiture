@@ -20,7 +20,7 @@ class ModelDePrediction:
 
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
-
+    #Méthode pour entrainer le modele et le sauvegarder pour une utilisation
     def train_and_save_model(self):
         print("Chargement des données depuis la base de données...")
         engine = create_engine(self.db_url)
@@ -31,6 +31,7 @@ class ModelDePrediction:
         data = pd.read_sql_query(query, engine)
 
         print("Préparation des données...")
+        #Séparation des données
         X = pd.get_dummies(data[['marque', 'modele', 'annee', 'kilometrage', 'boite_vitesse', 'carburant']])
         data['prix_log'] = np.log1p(data['prix'])
         y = data['prix_log']

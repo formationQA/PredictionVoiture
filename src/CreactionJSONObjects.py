@@ -1,15 +1,15 @@
-import re   #Traiter les regexs
-import os   #traiter le system fichier
-import json #manipuler les fichiers JSON
-import configparser #manipuler le fichier de config (ini)
-from datetime import datetime, timedelta
+import re
+import os
+import json
+import configparser
+import subprocess
+from datetime import datetime
 from threading import Lock
 
 
 class JsonConvert:
     fichier_configuration = '../config/ConfigBDD.ini'
 
-    #COnstructeur
     def __init__(self):
         self.config = self.ImportConfiguration(self.fichier_configuration)
         self.rep_sauvegarde_txt = self.config['rep_sauvegarde_txt']
@@ -22,18 +22,15 @@ class JsonConvert:
     def ImportConfiguration(fichier_configuration):
         parser = configparser.ConfigParser()
         parser.read(fichier_configuration)
-        configuration = {
+        return {
             'rep_sauvegarde_txt': parser.get('properties', 'rep_sauvegarde_txt'),
             'rep_sauvegarde_json': parser.get('properties', 'rep_sauvegarde_json')
         }
-        return configuration
 
-#Nettoyage de chaînes de caractères (ne garde que les chiffres)
     @staticmethod
     def NettoyerNum(number_str):
         return re.sub(r'[^\d]', '', number_str)
 
-#Filtrer les lignes spéciales
     @staticmethod
     def NettoyerLignes(lines):
         ligne = [line for line in lines if line.strip() and line.strip() != "•"]
@@ -41,13 +38,11 @@ class JsonConvert:
         ligne = [line for line in ligne if not line.startswith("+")]
         return ligne
 
-#Découper un texte en sections
     @staticmethod
     def ExtraireSections(text):
         sections = text.strip().split('\n\n')
         return [section.strip() for section in sections if section.strip()]
 
-#Préparer les données JSON pour chaque voiture
     @staticmethod
     def PreparerDonneesJson(info_voitures):
         sections = JsonConvert.ExtraireSections(info_voitures)
@@ -79,6 +74,22 @@ class JsonConvert:
         with open(fichier_sortie, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
+    @staticmethod
+    def ValiderJSON(fichier):
+        """
+        Utilise le binaire json_validator compilé avec Bison/Flex pour valider.
+        """
+        try:
+            result = subprocess.run(
+                ["../parser/json_validator", fichier],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            return result.returncode == 0
+        except FileNotFoundError:
+            print("⚠️ Erreur : json_validator introuvable. Compile-le avec `make`.")
+            return False
+
     def GenererNomFichier(self):
         with self.lock:
             now = datetime.now()
@@ -97,16 +108,22 @@ class JsonConvert:
 
         for filename in sorted(os.listdir(self.rep_sauvegarde_txt)):
             if filename.endswith('.txt'):
-                print(f"Traitement du fichier: {filename}")
+                print(f"📄 Traitement du fichier: {filename}")
 
                 fichier = os.path.join(self.rep_sauvegarde_txt, filename)
                 text = self.LectureFichier(fichier)
                 data = self.PreparerDonneesJson(text)
-                print(f"Données extraites: {data}")
 
                 json_filename = self.GenererNomFichier()
                 fichier_sortie = os.path.join(self.rep_sauvegarde_json, json_filename)
 
                 self.InsertionDansJSON(data, fichier_sortie)
+
+                # Validation avec json_validator
+                if not self.ValiderJSON(fichier_sortie):
+                    print(f"❌ JSON invalide, suppression : {fichier_sortie}")
+                    os.remove(fichier_sortie)
+                else:
+                    print(f"✅ JSON valide sauvegardé : {fichier_sortie}")
+
                 os.remove(fichier)
-                print(f"Fichier JSON sauvegardé : {fichier_sortie}")
