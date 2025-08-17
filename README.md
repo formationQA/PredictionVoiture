@@ -38,7 +38,7 @@ CREATE DATABASE postgres;
 
 Lancer back end API :
 
-uvicorn app:app --reload --host 0.0.0.0 --port 8002
+uvicorn mainApi:app --reload --host 0.0.0.0 --port 8002
 
 Lancer le front end :
 
